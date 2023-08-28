@@ -1,10 +1,10 @@
 def call(Map config = [:]) {
-    if (${config.GIT_BRANCH} == "main") {
+    if (config.GIT_BRANCH == "main") {
         ECR_IMAGE="${config.DOCKER_IMAGE_REPO}:${config.DOCKER_IMAGE_REPO_TAG}-v_${config.GIT_BRANCH}_${config.BUILD_NUMBER}"
     } else {
         ECR_IMAGE="${config.DOCKER_IMAGE_REPO_TAG}-v_${config.BRANCH}_${config.BUILD_NUMBER}"
     }
-    
+
     sh """
         rm -rf deploy/kube-manifests-qa-argo
         mkdir deploy/kube-manifests-qa-argo
