@@ -3,6 +3,6 @@ def call() {
     if (commitMessage == '[AUTOMATION] Sync deployment file with new image version') {
         //currentBuild.result = 'ABORTED'
         currentBuild.rawBuild.@result = hudson.model.Result.SUCCESS
-        error('Pipeline execution skipped due to specific commit message')
+        warnError('Pipeline execution skipped due to specific commit message')
     }
 }
