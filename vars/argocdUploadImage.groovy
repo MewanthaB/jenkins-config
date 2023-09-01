@@ -14,7 +14,7 @@ def call(Map config = [:]) {
         git pull origin "${config.GIT_BRANCH}"
         git branch
         git add deploy/kube-manifests-qa-argo/Deployment.yml deploy/kube-manifests-qa-argo/Service.yml
-        git commit -m "CI: Update image for ArgoCD"
+        git commit -m "[AUTOMATION] Sync deployment file with new image version"
         git tag ${config.BRANCH}_${config.BUILD_NUMBER}
         git push -u origin "${config.GIT_BRANCH}"
         git push origin ${config.BRANCH}_${config.BUILD_NUMBER}

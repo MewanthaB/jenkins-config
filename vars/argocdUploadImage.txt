@@ -1,0 +1,1 @@
+Update the deployment file with the correct image version so that ArgoCD can pull the correct image.
