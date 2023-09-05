@@ -9,6 +9,7 @@ def call(Map config = [:]) {
         ARGO_BRANCH="ARGO__${config.GIT_BRANCH}"
         sh """
             git checkout -b ${config.GIT_BRANCH} && git pull origin ${config.GIT_BRANCH}
+            git branch -D "${ARGO_BRANCH}"
             git checkout -b "${ARGO_BRANCH}" "${config.GIT_BRANCH}"
             git pull
             echo "Created and switched to branch '${ARGO_BRANCH}' based on '${config.GIT_BRANCH}'."
@@ -24,6 +25,7 @@ def call(Map config = [:]) {
             git push -u origin "${ARGO_BRANCH}"
             git push origin ${config.BRANCH}_${config.BUILD_NUMBER}
 
+            git checkout ${config.GIT_BRANCH}
             git branch -D "${ARGO_BRANCH}"
         """
     } catch (Exception e) {
