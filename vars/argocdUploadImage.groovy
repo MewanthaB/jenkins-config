@@ -9,21 +9,8 @@ def call(Map config = [:]) {
         ARGO_BRANCH="ARGO__${config.GIT_BRANCH}"
         sh """
             git checkout -b ${config.GIT_BRANCH} && git pull origin ${config.GIT_BRANCH}
-            # Check if the "ARGO_BRANCH" already exists
-            if git rev-parse --verify --quiet "${ARGO_BRANCH}"; then
-                echo "Branch already exists"
-                # If "ARGO_BRANCH" exists, switch to it and merge changes from "GIT_BRANCH"
-                git checkout -b "${ARGO_BRANCH}"
-                git pull origin "${ARGO_BRANCH}"
-                git pull origin "${config.GIT_BRANCH}"
-                echo "Switched to branch '${ARGO_BRANCH}' and merged changes from '${config.GIT_BRANCH}'."
-            else
-                # If "newbranch" doesn't exist, create it based on "config.GIT_BRANCH"
-                echo "Branch does not exist, creating"
-                git checkout -b "${ARGO_BRANCH}" "${config.GIT_BRANCH}"
-                git pull
-                echo "Created and switched to branch '${ARGO_BRANCH}' based on '${config.GIT_BRANCH}'."
-            fi
+            git checkout -b "${ARGO_BRANCH}" "${config.GIT_BRANCH}"
+            echo "Created and switched to branch '${ARGO_BRANCH}' based on '${config.GIT_BRANCH}'."
 
             git branch
             rm -rf deploy/kube-manifests-qa-argo
@@ -35,6 +22,8 @@ def call(Map config = [:]) {
             git tag ${config.BRANCH}_${config.BUILD_NUMBER}
             git push -u origin "${ARGO_BRANCH}"
             git push origin ${config.BRANCH}_${config.BUILD_NUMBER}
+
+            git branch -D "${ARGO_BRANCH}"
         """
     } catch (Exception e) {
         println("Something went wrong with Git operation for ArgoCD")
