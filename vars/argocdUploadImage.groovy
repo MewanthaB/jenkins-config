@@ -10,6 +10,7 @@ def call(Map config = [:]) {
         sh """
             git checkout -b ${config.GIT_BRANCH} && git pull origin ${config.GIT_BRANCH}
             git checkout -b "${ARGO_BRANCH}" "${config.GIT_BRANCH}"
+            git pull
             echo "Created and switched to branch '${ARGO_BRANCH}' based on '${config.GIT_BRANCH}'."
 
             git branch
