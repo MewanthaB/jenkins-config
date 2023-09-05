@@ -9,7 +9,7 @@ def call(Map config = [:]) {
         ARGO_BRANCH="ARGO__${config.GIT_BRANCH}"
         sh """
             # Check if the "ARGO_BRANCH" already exists
-            if git ls-remote --heads origin refs/heads/${ARGO_BRANCH}; then
+            if git rev-parse --verify --quiet "${ARGO_BRANCH}"; then
                 echo "Branch already exists"
                 # If "ARGO_BRANCH" exists, switch to it and merge changes from "GIT_BRANCH"
                 git checkout -b "${ARGO_BRANCH}"
