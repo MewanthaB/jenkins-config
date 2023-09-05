@@ -6,9 +6,20 @@ def call(Map config = [:]) {
     }
 
     try {
+        ARGO_BRANCH="ARGO__${config.GIT_BRANCH}"
         sh """
-            git checkout -b "${config.GIT_BRANCH}"
-            git pull origin "${config.GIT_BRANCH}"
+            # Check if the "ARGO_BRANCH" already exists
+            if git rev-parse --verify --quiet "${ARGO_BRANCH}"; then
+                # If "ARGO_BRANCH" exists, switch to it and merge changes from "GIT_BRANCH"
+                git checkout "${ARGO_BRANCH}"
+                git pull origin "${config.GIT_BRANCH}"
+                echo "Switched to branch '${ARGO_BRANCH}' and merged changes from '${config.GIT_BRANCH}'."
+            else
+                # If "newbranch" doesn't exist, create it based on "config.GIT_BRANCH"
+                git checkout -b "${ARGO_BRANCH}" "${config.GIT_BRANCH}"
+                echo "Created and switched to branch '${ARGO_BRANCH}' based on '${config.GIT_BRANCH}'."
+            fi
+
             git branch
             rm -rf deploy/kube-manifests-qa-argo
             mkdir deploy/kube-manifests-qa-argo
@@ -17,7 +28,7 @@ def call(Map config = [:]) {
             git add deploy/kube-manifests-qa-argo/Deployment.yml deploy/kube-manifests-qa-argo/Service.yml
             git commit -m "[AUTOMATION] Sync deployment file with new image version"
             git tag ${config.BRANCH}_${config.BUILD_NUMBER}
-            git push -u origin "${config.GIT_BRANCH}"
+            git push -u origin "${ARGO_BRANCH}"
             git push origin ${config.BRANCH}_${config.BUILD_NUMBER}
         """
     } catch (Exception e) {
