@@ -10,6 +10,7 @@ def call(Map config = [:]) {
         sh """
             # Check if the "ARGO_BRANCH" already exists
             if git ls-remote --heads origin refs/heads/${ARGO_BRANCH}; then
+                echo "Branch already exists"
                 # If "ARGO_BRANCH" exists, switch to it and merge changes from "GIT_BRANCH"
                 git checkout -b "${ARGO_BRANCH}"
                 git pull origin "${ARGO_BRANCH}"
@@ -17,6 +18,7 @@ def call(Map config = [:]) {
                 echo "Switched to branch '${ARGO_BRANCH}' and merged changes from '${config.GIT_BRANCH}'."
             else
                 # If "newbranch" doesn't exist, create it based on "config.GIT_BRANCH"
+                echo "Branch does not exist, creating"
                 git checkout -b "${ARGO_BRANCH}" "${config.GIT_BRANCH}"
                 git pull
                 echo "Created and switched to branch '${ARGO_BRANCH}' based on '${config.GIT_BRANCH}'."
