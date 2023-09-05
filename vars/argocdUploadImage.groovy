@@ -8,6 +8,7 @@ def call(Map config = [:]) {
     try {
         ARGO_BRANCH="ARGO__${config.GIT_BRANCH}"
         sh """
+            git checkout ${config.GIT_BRANCH}
             # Check if the "ARGO_BRANCH" already exists
             if git rev-parse --verify --quiet "${ARGO_BRANCH}"; then
                 # If "ARGO_BRANCH" exists, switch to it and merge changes from "GIT_BRANCH"
@@ -16,7 +17,6 @@ def call(Map config = [:]) {
                 echo "Switched to branch '${ARGO_BRANCH}' and merged changes from '${config.GIT_BRANCH}'."
             else
                 # If "newbranch" doesn't exist, create it based on "config.GIT_BRANCH"
-                git fetch --all
                 git checkout -b "${ARGO_BRANCH}" "${config.GIT_BRANCH}"
                 echo "Created and switched to branch '${ARGO_BRANCH}' based on '${config.GIT_BRANCH}'."
             fi
