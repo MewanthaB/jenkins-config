@@ -8,7 +8,7 @@ def call(Map config = [:]) {
     try {
         ARGO_BRANCH="ARGO__${config.GIT_BRANCH}"
         sh """
-            git getch
+            git fetch
             # Check if the "ARGO_BRANCH" already exists
             if git ls-remote --heads origin refs/heads/${ARGO_BRANCH}; then
                 # If "ARGO_BRANCH" exists, switch to it and merge changes from "GIT_BRANCH"
