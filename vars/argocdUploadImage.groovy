@@ -8,6 +8,7 @@ def call(Map config = [:]) {
     try {
         ARGO_BRANCH="ARGO__${config.GIT_BRANCH}"
         sh """
+            git checkout -b ${config.GIT_BRANCH} && git pull origin ${config.GIT_BRANCH}
             # Check if the "ARGO_BRANCH" already exists
             if git rev-parse --verify --quiet "${ARGO_BRANCH}"; then
                 echo "Branch already exists"
