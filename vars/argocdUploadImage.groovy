@@ -18,6 +18,7 @@ def call(Map config = [:]) {
             else
                 # If "newbranch" doesn't exist, create it based on "config.GIT_BRANCH"
                 git checkout -b "${ARGO_BRANCH}" "${config.GIT_BRANCH}"
+                git pull
                 echo "Created and switched to branch '${ARGO_BRANCH}' based on '${config.GIT_BRANCH}'."
             fi
 
